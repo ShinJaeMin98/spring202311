@@ -3,13 +3,19 @@ package models.member;
 import commons.exceptions.BadRequestException;
 import commons.validators.RequiredValidator;
 import commons.validators.Validator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 public class JoinValidator implements Validator<Member>, RequiredValidator {
 
     // 전략패턴
     // 상속은 확장에 유리하지 않은 형태이므로
     // 내부 구성 요소로서 추가하는 것이 확장에 가장 유리한 구조이다.
+    @Autowired
+    @Qualifier("memberDao")
     private MemberDao memberDao;
+
+    public JoinValidator() {}
 
     // 내부구성요소로 추가하는 것 보다 외부 요소를 주입받는 것이 더 좋다.
     public JoinValidator(MemberDao memberDao) {
