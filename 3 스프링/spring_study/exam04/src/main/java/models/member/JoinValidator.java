@@ -4,8 +4,6 @@ import commons.exceptions.BadRequestException;
 import commons.validators.RequiredValidator;
 import commons.validators.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,14 +14,6 @@ public class JoinValidator implements Validator<Member>, RequiredValidator {
     // 내부 구성 요소로서 추가하는 것이 확장에 가장 유리한 구조이다.
     @Autowired
     private MemberDao memberDao;
-
-    public JoinValidator() {}
-
-    // 내부구성요소로 추가하는 것 보다 외부 요소를 주입받는 것이 더 좋다.
-    public JoinValidator(MemberDao memberDao) {
-        this.memberDao = memberDao;
-
-    }
 
     public void validate(Member member) {
         /* 필수 항목 검증(아이디, 비밀번호, 비밀번호 확인, 회원명) */

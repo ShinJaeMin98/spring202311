@@ -1,37 +1,33 @@
 package main;
 
 import config.AppCtx;
-import config.AppCtx2;
-import config.AppCtx3;
-import config.AppCtx4;
 import models.member.JoinService;
 import models.member.ListService;
 import models.member.Member;
+import models.member.MemberDao;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.lang.annotation.Annotation;
 import java.time.LocalDateTime;
 
 public class Ex01 {
     public static void main(String[] args) {
         AnnotationConfigApplicationContext ctx = new
-                AnnotationConfigApplicationContext(AppCtx4.class);
+                AnnotationConfigApplicationContext(AppCtx.class);
 
         JoinService joinService = ctx.getBean(JoinService.class);
         ListService listService = ctx.getBean(ListService.class);
 
         Member member = new Member();
-        member.setUserId("user01");
+        member.setUserId("userId");
         member.setUserPw("123456");
         member.setConfirmPw("123456");
         member.setUserNm("사용자01");
         member.setRegDt(LocalDateTime.now());
 
-        joinService.join(member);
+        joinService.join(member); // 회원 가입
 
-        listService.print();
+        listService.print();    // 가입 확인
 
         ctx.close();
-
     }
 }
