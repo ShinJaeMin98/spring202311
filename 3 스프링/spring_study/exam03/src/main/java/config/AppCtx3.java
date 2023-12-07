@@ -12,11 +12,12 @@ public class AppCtx3 {
     public MemberDao memberDao() {
         return new MemberDao();
     }
-
+    /*
     @Bean
     public MemberDao memberDao2() {
         return new MemberDao();
     }
+     */
 
     //@Bean
     public DateTimeFormatter formatter() {
