@@ -17,8 +17,28 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 @Configuration
 @EnableWebMvc
 public class MvcConfig implements WebMvcConfigurer {
+
     @Autowired
     private ApplicationContext applicationContext;
+
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
+        // 모든 요청 -> 컨트롤러 빈, 없는 경우 -> 정적 자원 경로(css, js, 이미지)
+
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/**") // 모든 경로
+                .addResourceLocations("classpath:/static/");
+    }
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/")
+                .setViewName("main/index");
+    }
 
     @Bean
     public SpringResourceTemplateResolver templateResolver() {
@@ -38,8 +58,8 @@ public class MvcConfig implements WebMvcConfigurer {
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.setTemplateResolver(templateResolver());
         templateEngine.setEnableSpringELCompiler(true);
-        templateEngine.addDialect(new Java8TimeDialect()); // Datetime
-        templateEngine.addDialect(new LayoutDialect());
+        templateEngine.addDialect(new Java8TimeDialect()); // Date Time API(java.time 패키지) - #temporals
+        templateEngine.addDialect(new LayoutDialect()); // 레이아웃 기능 추가
         return templateEngine;
     }
 
@@ -57,36 +77,17 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.viewResolver(thymeleafViewResolver());
     }
 
-
-    @Override
-    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
-        // 모든 요청 -> 컨트롤러 빈, 없는 경우 -> 정적 자원 경로(css, js, 이미지)
-    }
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**")
-                .addResourceLocations("classpath:/static/");
-    }
-
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/")
-                .setViewName("main/index");
-    }
-
     @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource ms = new ResourceBundleMessageSource();
         ms.setDefaultEncoding("UTF-8");
-        ms.setBasenames("messages.commons");
+        ms.setBasenames("messages.commons", "messages.validations");
 
         return ms;
     }
 
+    @Bean
     public Utils utils() {
         return new Utils();
     }
-
 }
