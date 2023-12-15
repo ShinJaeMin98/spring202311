@@ -1,10 +1,14 @@
 package controllers.member;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import models.member.Member;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,39 +16,61 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
+@RequestMapping("/member")
+@RequiredArgsConstructor
 public class MemberController {
 
-    @GetMapping("/member/join")
-    public String join(Model model) {
-        String[] addCss = {"member/style1", "member/style2"};
-        List<String> addScript = Arrays.asList("member/script1", "member/script2");
+    private final JoinValidator joinValidator;
 
-        model.addAttribute("addCss", addCss);
-        model.addAttribute("addScript", addScript);
+    @ModelAttribute("hobbies")
+    public List<String> hobbies() {
+        return Arrays.asList("자바", "오라클", "JSP", "스프링");
+    }
+
+    @GetMapping("/join") // /member/join
+    public String join(@ModelAttribute RequestJoin form, Model model) {
+
+        //model.addAttribute("requestJoin", new RequestJoin());
+        model.addAttribute("pageTitle", "회원가입");
 
         return "member/join";
     }
 
-    @PostMapping("/member/join")
-    public String joinPs(RequestJoin form) {
-        System.out.println(form);
 
-        return "member/join";
+    @PostMapping("/join") // /member/join
+    public String joinPs(@Valid RequestJoin form, Errors errors, Model model) {
+
+
+        joinValidator.validate(form, errors);
+
+        if (errors.hasErrors()) { // 검증 실패시
+
+            return "member/join";
+        }
+
+        // 커맨객체 RequestJoin  -> requestJoin 이름으로 속성이 추가 -> 템플릿 내에서 바로 접근 가능
+        // response.sendRedirect(request.getContextPath() + "/member/login")
+        // Location: 주소
+        return "redirect:/member/login";
+
     }
 
-    @GetMapping("/member/login")
+
+    @GetMapping("/login") // /member/login
     public String login() {
 
         return "member/login";
     }
 
-    @PostMapping("/member/login")
+    @PostMapping("/login") // /member/login
     public String loginPs(RequestLogin form) {
+
+        System.out.println(form);
 
         return "member/login";
     }
 
-    @GetMapping("/member/list")
+    @GetMapping("/list") // /member/list
     public String members(Model model) {
 
         List<Member> members = new ArrayList<>();
@@ -59,9 +85,9 @@ public class MemberController {
                     .build();
             members.add(member);
         }
+
         model.addAttribute("members", members);
 
         return "member/list";
     }
 }
-
