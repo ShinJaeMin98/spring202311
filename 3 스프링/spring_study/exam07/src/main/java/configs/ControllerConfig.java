@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
-@ComponentScan("controllers")
+@ComponentScan({"controllers", "models"})
 public class ControllerConfig {
         /*
         @Bean
