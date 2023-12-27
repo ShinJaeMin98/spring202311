@@ -1,8 +1,8 @@
 server:
-  port: 3000  # 한 칸 꼭 띄우기
+  port: 3000
 
 spring:
-  # 데이터 베이스 설정
+  # 데이터베이스 설정
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
     url: jdbc:oracle:thin:@localhost:1521:orcl
@@ -14,29 +14,28 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.OracleDialect
-        show_sql: true  # 로그로 확인해볼 수 있음 (문제 파악 가능)
-        format_sql: true  # sql 가독성을 높여줌
-        use_sql_comments: true  # sql 코멘트 확인
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
     hibernate:
       ddlAuto: create
 
-
-  # 라이브 리로드 활성
+  # 라이브 리로드 설정
   devtools:
     livereload:
       enabled: true
 
   # 타임리프 설정
   thymeleaf:
-    cache: false;
-    prefix: file:src/main/resources/templates/  # 마지막에 /(슬래시) 꼭 붙이기!!
+    cache: false
+    prefix: file:src/main/resources/templates/
 
   # 정적 자원 설정(CSS, JS, 이미지)
   web:
     resources:
       staticLocations: file:src/main/resources/static/
 
-  # 파일 업로드 설정 (최대 용량)
+  # 파일 업로드 설정
   servlet:
     multipart:
       maxFileSize: 20MB
